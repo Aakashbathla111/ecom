@@ -47,19 +47,26 @@ const Login = () => {
         const password = e.target[1].value;
 
         try{
-            const User = await signInWithEmailAndPassword(auth, email, password);
-
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const User = userCredential.user;
+            console.log(User)
             dispatch(setCurrentUser(User))
             //get data from database
+            console.log("hey1")
             const users = collection(db, "users");
+            console.log("hey2", users)
             const querySnapshot = await getDocs(users);
+            console.log("hey3", querySnapshot)
             querySnapshot.forEach(async (user) => {
                 const userId = User.user.uid;
                 const currentUserDoc = querySnapshot.docs.find((doc) => doc.id === userId);
                 if (currentUserDoc) {
+                    console.log("user found")
                     const userData = currentUserDoc.data();
                     dispatch(setCart(userData.carts));
                     dispatch(setOrders(userData.orders));
+                }else {
+                    console.log("No such document!");
                 }
             })
             //navigate to homepage
@@ -103,3 +110,8 @@ const Login = () => {
     )
 }
 export default Login;
+
+
+// const userData = currentUserDoc.data();
+// dispatch(setCart(userData.carts));
+// dispatch(setOrders(userData.orders));

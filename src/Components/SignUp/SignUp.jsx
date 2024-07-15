@@ -51,7 +51,9 @@ const SignUp = () => {
         const orders = dispatch(setOrders([]));
 
         try{
+            console.log("He")
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            console.log("Hey",userCredential.user.uid)
             await setDoc(doc(db, "users", userCredential.user.uid), {
                 displayName,
                 email,
@@ -59,11 +61,13 @@ const SignUp = () => {
                 carts,
                 orders
             })
+            console.log("Hello")
             dispatch(setCurrentUser(userCredential))
             navigate('/');
             toast.success("User Created Successfully");
         }
         catch(error) {
+            console.error("Error during sign up:", error);
             dispatch(fetchError(true));
             toast.error("Please enter valid Email/Password");
         }
